@@ -27,7 +27,7 @@ function ProductCard({ product }) {
       <h3 className="text-lg text-black font-semibold mb-2">{truncatedName}</h3>
       <p className="text-textMuted mb-4">{truncatedDescription}</p>
       <p className="text-xl text-black font-bold mb-4">{formattedPrice}</p>
-      <Button>Add to Cart</Button>
+      <Button text="Add To Cart" />
     </div>
   );
 }

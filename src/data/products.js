@@ -4,13 +4,16 @@ import product3 from "../assets/images/product3.jpg";
 
 const data = [
   {
+    id: 1,
     name: "Sneakers Denim Fabric Men's Shoes",
     category: "Sneakers",
     price: 68000,
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem maxime placeat quibusdam sit cum ducimus magni provident modi eveniet animi eligendi, eos omnis quasi exercitationem excepturi. Veniam delectus facilis aut.",
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem maxime placeat quibusdam sit cum ducimus magni provident modi eveniet animi eligendi, eos omnis quasi exercitationem excepturi. Veniam delectus facilis aut.",
     image: product1,
   },
   {
+    id: 2,
     name: "Sneakers Denim Fabric Men's Shoes",
     category: "Sneakers",
     price: 68000,
@@ -18,6 +21,7 @@ const data = [
     image: product1,
   },
   {
+    id: 3,
     name: "Men's Sweatpants Jogger Cargo Pants Street Men's Hip Hop Punk Sweatpants (Khaki)",
     category: "Sneakers",
     price: 21880,
@@ -25,6 +29,7 @@ const data = [
     image: product2,
   },
   {
+    id: 4,
     name: "Mens Lightweight Coats Blazer Jackets Double Sided Wear Outerwear Green",
     category: "Sneakers",
     price: 24500,

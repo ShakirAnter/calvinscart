@@ -44,6 +44,13 @@ body {
   /* place-items: center; */
   min-width: 320px;
   min-height: 100vh;
+  overflow-x: hidden;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
 }
 
 h1 {
@@ -87,6 +94,25 @@ button:focus-visible {
   100% {
     transform: translateY(0);
     opacity: 1;
+  }
+}
+
+.hero-section{
+  background-image: url("./assets/images/hero_bg.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: right;
+}
+
+@media only screen and (max-width: 768px) {
+  .hero-section {
+    background-image: none;
+  }
+}
+@media only screen and (max-width: 519px) {
+  .hero-section {
+    padding: 0 30px;
+    text-align: start;
   }
 }
 
