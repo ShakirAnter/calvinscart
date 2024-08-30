@@ -20,7 +20,7 @@ function ProductCard({ product }) {
   return (
     <div className="bg-[#c7bcbb] cursor-pointer border border-gray-200 shadow-sm p-4 rounded-3xl">
       <img
-        src={product.image}
+        src={`data:image/jpeg;base64,${product.image}`}
         alt={product.name}
         className="w-full h-48 object-cover rounded-lg mb-4"
       />

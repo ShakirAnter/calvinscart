@@ -39,3 +39,13 @@ const data = [
 ];
 
 export default data;
+
+// Clothing: 66d1f8fe82923b7c905e6ad3
+
+// Shoes: 66d1f8fe82923b7c905e6ad5
+
+// Accessories: 66d1f8ff82923b7c905e6ad7
+
+// Jewelry: 66d1f8ff82923b7c905e6ad9
+
+// Handbags & wallets: 66d1f8ff82923b7c905e6adb

@@ -11,10 +11,10 @@ import hero_bg from "../assets/images/hero_bg.png";
 import ProductCategorySection from "../components/ProductCategorySection";
 import productsData from "../data/products";
 
-import sliderImage1 from "../assets/images/sliderimage1.jpg";
-import sliderImage2 from "../assets/images/sliderimage2.jpg";
-import sliderImage3 from "../assets/images/sliderimage3.jpg";
-import sliderImage4 from "../assets/images/sliderimage4.jpg";
+// import sliderImage1 from "../assets/images/sliderimage1.jpg";
+// import sliderImage2 from "../assets/images/sliderimage2.jpg";
+// import sliderImage3 from "../assets/images/sliderimage3.jpg";
+// import sliderImage4 from "../assets/images/sliderimage4.jpg";
 import logo from "../assets/images/logo1.png";
 
 import tshirt from "../assets/icons/tshirt.png";
@@ -29,10 +29,90 @@ import { ACC_TOKEN, API_BASE_URL } from "../config/apiConfig";
 import Footer from "../components/Footer";
 
 function Home() {
+  const [categories, setCategories] = useState(null);
+  const [productsData, setProductsData] = useState(null);
+
+  const fetchAllProducts = async () => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/products/get-all-products`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setProductsData(data.products);
+      } else {
+        console.error("Failed to fetch products: ", data.message);
+      }
+    } catch (error) {
+      console.error("Failed to fetch products: ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllProducts();
+  }, []);
+
+  if (productsData) {
+    console.log(productsData);
+  }
+
   return (
     <div>
       <NavBar />
       <HeroSection />
+      {/* <ProductCategorySection
+        category={{
+          name: "Sneakers",
+          description: "Explore our latest sneakers collection",
+        }}
+        products={productsData.filter(
+          (product) => product.category === "Sneakers"
+        )}
+      /> */}
+      <CategoriesSelector
+        categories={categories}
+        setCategories={setCategories}
+      />
+      {categories &&
+        categories
+          .filter(
+            (category) =>
+              productsData &&
+              productsData.some((product) => product.category === category._id)
+          )
+          .map((category) => (
+            <ProductCategorySection
+              key={category._id}
+              category={{
+                name: category.name,
+                description: category.description,
+              }}
+              products={
+                productsData &&
+                productsData
+                  .filter((product) => product.category === category._id)
+                  .slice(0, 4)
+              } // Only display four products in each category
+            />
+          ))}
+      {/* <ProductCategorySection
+        category={{
+          name: "Sneakers",
+          description: "Explore our latest sneakers collection",
+        }}
+        products={productsData.filter(
+          (product) => product.category === "Sneakers"
+        )}
+      />
+
       <ProductCategorySection
         category={{
           name: "Sneakers",
@@ -43,8 +123,6 @@ function Home() {
         )}
       />
 
-      <CategoriesSelector />
-
       <ProductCategorySection
         category={{
           name: "Sneakers",
@@ -53,28 +131,7 @@ function Home() {
         products={productsData.filter(
           (product) => product.category === "Sneakers"
         )}
-      />
-
-      <ProductCategorySection
-        category={{
-          name: "Sneakers",
-          description: "Explore our latest sneakers collection",
-        }}
-        products={productsData.filter(
-          (product) => product.category === "Sneakers"
-        )}
-      />
-
-      <ProductCategorySection
-        category={{
-          name: "Sneakers",
-          description: "Explore our latest sneakers collection",
-        }}
-        products={productsData.filter(
-          (product) => product.category === "Sneakers"
-        )}
-      />
-
+      /> */}
       <NewsLetter />
       <Footer />
     </div>
@@ -98,33 +155,36 @@ const HeroSection = () => {
   );
 };
 
-const CategoriesSelector = () => {
-  const categories = [
-    {
-      name: "Tops",
-      img: tshirt,
-    },
-    {
-      name: "Bottoms",
-      img: shorts,
-    },
-    {
-      name: "Dresses",
-      img: dress,
-    },
-    {
-      name: "Accessories",
-      img: wristWatch,
-    },
-    {
-      name: "Jewelry",
-      img: jewelry,
-    },
-    {
-      name: "More",
-      img: seeMore,
-    },
-  ];
+const CategoriesSelector = ({ categories, setCategories }) => {
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/categories/get-all-categories`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setCategories(data.categories);
+        console.log(data.categories);
+      } else {
+        toast.error("Failed to fetch categories: ", data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch categories");
+      console.error("Failed to fetch categories: ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, [API_BASE_URL]);
 
   const CategoryCard = (props) => {
     return (
@@ -154,13 +214,14 @@ const CategoriesSelector = () => {
         className="flex flex-nowrap overflow-x-auto justify-center w-screen mt-5"
         style={{ scrollbarWidth: "thin", scrollbarColor: "#ccc #fff" }}
       >
-        {categories.map((category) => (
-          <CategoryCard
-            key={category.name}
-            name={category.name}
-            img={category.img}
-          />
-        ))}
+        {categories &&
+          categories.map((category) => (
+            <CategoryCard
+              key={category.name}
+              name={category.name}
+              img={`data:image/png;base64,${category.image}`}
+            />
+          ))}
       </div>
     </div>
   );
