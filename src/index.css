@@ -97,11 +97,37 @@ button:focus-visible {
   }
 }
 
-.hero-section{
+.hero-section {
   background-image: url("./assets/images/hero_bg.png");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: right;
+}
+
+.clothing-hero {
+  background-image: url("./assets/images/clothingCategoryImage.jpg");
+}
+.accessories-hero {
+  background-image: url("./assets/images/accessoriesCategoryImage.jpg");
+}
+.shoes-hero {
+  background-image: url("./assets/images/shoesCategoryImage.jpg");
+}
+.jewelry-hero {
+  background-image: url("./assets/images/jewelryCategoryImage.jpeg");
+}
+.handbags-and-wallets-hero {
+  background-image: url("./assets/images/handbagsCategoryImage.jpeg");
+}
+
+.default-hero {
+  background-image: url("./assets/images/accessoriesCategoryImage.jpg");
+}
+
+.single-product-hero {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 @media only screen and (max-width: 768px) {

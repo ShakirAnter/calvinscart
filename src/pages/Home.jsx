@@ -10,11 +10,6 @@ import "react-toastify/dist/ReactToastify.css";
 import hero_bg from "../assets/images/hero_bg.png";
 import ProductCategorySection from "../components/ProductCategorySection";
 import productsData from "../data/products";
-
-// import sliderImage1 from "../assets/images/sliderimage1.jpg";
-// import sliderImage2 from "../assets/images/sliderimage2.jpg";
-// import sliderImage3 from "../assets/images/sliderimage3.jpg";
-// import sliderImage4 from "../assets/images/sliderimage4.jpg";
 import logo from "../assets/images/logo1.png";
 
 import tshirt from "../assets/icons/tshirt.png";
@@ -24,13 +19,16 @@ import wristWatch from "../assets/icons/wristwatch.png";
 import jewelry from "../assets/icons/jewelry.png";
 import seeMore from "../assets/icons/more.png";
 import CustomInput from "../components/CustomInput";
+import NewsLetter from "../components/NewsLetter";
 
 import { ACC_TOKEN, API_BASE_URL } from "../config/apiConfig";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const [categories, setCategories] = useState(null);
   const [productsData, setProductsData] = useState(null);
+  const navigate = useNavigate();
 
   const fetchAllProducts = async () => {
     try {
@@ -48,6 +46,7 @@ function Home() {
 
       if (response.ok) {
         setProductsData(data.products);
+        localStorage.setItem("productsData", JSON.stringify(data.products));
       } else {
         console.error("Failed to fetch products: ", data.message);
       }
@@ -60,23 +59,10 @@ function Home() {
     fetchAllProducts();
   }, []);
 
-  if (productsData) {
-    console.log(productsData);
-  }
-
   return (
     <div>
       <NavBar />
       <HeroSection />
-      {/* <ProductCategorySection
-        category={{
-          name: "Sneakers",
-          description: "Explore our latest sneakers collection",
-        }}
-        products={productsData.filter(
-          (product) => product.category === "Sneakers"
-        )}
-      /> */}
       <CategoriesSelector
         categories={categories}
         setCategories={setCategories}
@@ -91,10 +77,7 @@ function Home() {
           .map((category) => (
             <ProductCategorySection
               key={category._id}
-              category={{
-                name: category.name,
-                description: category.description,
-              }}
+              category={category}
               products={
                 productsData &&
                 productsData
@@ -103,35 +86,6 @@ function Home() {
               } // Only display four products in each category
             />
           ))}
-      {/* <ProductCategorySection
-        category={{
-          name: "Sneakers",
-          description: "Explore our latest sneakers collection",
-        }}
-        products={productsData.filter(
-          (product) => product.category === "Sneakers"
-        )}
-      />
-
-      <ProductCategorySection
-        category={{
-          name: "Sneakers",
-          description: "Explore our latest sneakers collection",
-        }}
-        products={productsData.filter(
-          (product) => product.category === "Sneakers"
-        )}
-      />
-
-      <ProductCategorySection
-        category={{
-          name: "Sneakers",
-          description: "Explore our latest sneakers collection",
-        }}
-        products={productsData.filter(
-          (product) => product.category === "Sneakers"
-        )}
-      /> */}
       <NewsLetter />
       <Footer />
     </div>
@@ -156,6 +110,8 @@ const HeroSection = () => {
 };
 
 const CategoriesSelector = ({ categories, setCategories }) => {
+  const navigate = useNavigate();
+
   const fetchCategories = async () => {
     try {
       const response = await fetch(
@@ -172,7 +128,7 @@ const CategoriesSelector = ({ categories, setCategories }) => {
 
       if (response.ok) {
         setCategories(data.categories);
-        console.log(data.categories);
+        localStorage.setItem("categories", JSON.stringify(data.categories));
       } else {
         toast.error("Failed to fetch categories: ", data.message);
       }
@@ -197,6 +153,7 @@ const CategoriesSelector = ({ categories, setCategories }) => {
           justifyContent: "center",
           alignItems: "center",
         }}
+        onClick={props.onClick}
       >
         <img src={props.img} alt={props.name} className="w-10" />
         <span className="text-lg text-black">{props.name}</span>
@@ -220,83 +177,15 @@ const CategoriesSelector = ({ categories, setCategories }) => {
               key={category.name}
               name={category.name}
               img={`data:image/png;base64,${category.image}`}
+              onClick={() =>
+                navigate(`/categories/${category._id}`, {
+                  state: { categories },
+                })
+              }
             />
           ))}
       </div>
     </div>
-  );
-};
-
-const NewsLetter = () => {
-  const [email, setEmail] = useState("");
-
-  const subscribeToNewsLetter = async (e) => {
-    // Function to subscribe to NewsLetter
-
-    e.preventDefault();
-
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(email)) {
-      toast.error("Invalid email address");
-      return;
-    }
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/newsletter/subscribe`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${ACC_TOKEN}`,
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast.success(data.message);
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
-
-  return (
-    <section className="bg-[#28292b] w-screen items-center flex-col md:flex-row md:justify-between">
-      <img
-        src={logo}
-        alt="logo"
-        className="w-[200px] h-[200px] md:w-[150px] md:h-[150px] mb-5 md:mb-0"
-      />
-      <div className="flex flex-col justify-center items-center w-full md:w-1/2">
-        <h2 className="text-3xl">Stay Updated with Our Latest News!</h2>
-        <p className="text-lg md:text-base text-textMuted">
-          Join our newsletter to receive exclusive promotions, new product
-          releases, and early access to sales.
-        </p>
-        <form
-          onSubmit={subscribeToNewsLetter}
-          className="w-full flex flex-col items-center justify-center"
-        >
-          <CustomInput
-            type="email"
-            icon="fa-solid fa-envelope"
-            placeholder="Please type in your email address"
-            divClassName="mt-2 w-full"
-            inputclassName="w-full"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <Button
-            text="Subscribe"
-            variant="primar"
-            className="mt-3 w-full md:w-3/4"
-            onClick={subscribeToNewsLetter}
-          />
-        </form>
-      </div>
-    </section>
   );
 };
 

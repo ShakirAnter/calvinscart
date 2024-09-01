@@ -2,10 +2,14 @@ import React, { useState } from "react";
 
 import API_BASE_URL from "../config/apiConfig";
 
-const fetchProductsCategory = async () => {
+const fetchProductsByCategory = async () => {
   try {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryId = urlParams.get("categoryId");
+
     const response = await fetch(
-      `${API_BASE_URL}/api/products/all-products/66d1f8fe82923b7c905e6ad3`,
+      `${API_BASE_URL}/api/products/all-products/${categoryId}`,
       {
         method: "GET",
         headers: {

@@ -1,8 +1,11 @@
 // src/components/ProductCard.jsx
 import React from "react";
 import Button from "./Button";
+import { useNavigate } from "react-router-dom";
 
 function ProductCard({ product }) {
+  const navigate = useNavigate();
+
   const truncatedName =
     product.name.length > 25
       ? product.name.substring(0, 25) + "..."
@@ -18,7 +21,10 @@ function ProductCard({ product }) {
   });
 
   return (
-    <div className="bg-[#c7bcbb] cursor-pointer border border-gray-200 shadow-sm p-4 rounded-3xl">
+    <div
+      className="bg-[#c7bcbb] cursor-pointer border border-gray-200 shadow-sm p-4 rounded-3xl"
+      onClick={() => navigate(`/products/${product._id}`)}
+    >
       <img
         src={`data:image/jpeg;base64,${product.image}`}
         alt={product.name}
