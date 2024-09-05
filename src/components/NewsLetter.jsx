@@ -3,6 +3,10 @@ import logo from "../assets/images/logo1.png";
 import CustomInput from "./CustomInput";
 import Button from "./Button";
 
+import { API_BASE_URL } from "../config/apiConfig";
+
+import { ToastContainer, toast } from "react-toastify";
+
 const NewsLetter = () => {
   const [email, setEmail] = useState("");
 
@@ -16,6 +20,8 @@ const NewsLetter = () => {
       toast.error("Invalid email address");
       return;
     }
+
+    const ACC_TOKEN = localStorage.getItem("token");
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/newsletter/subscribe`, {

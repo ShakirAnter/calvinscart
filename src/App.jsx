@@ -5,13 +5,16 @@ import "./App.css";
 
 import AppRouter from "./routes/AppRouter";
 import ToTop from "./components/ToTop";
+import { CartProvider } from "./context/CartContext";
 
 function App() {
   return (
-    <div className="App">
-      <AppRouter />
-      <ToTop />
-    </div>
+    <CartProvider>
+      <div className="App">
+        <AppRouter />
+        <ToTop />
+      </div>
+    </CartProvider>
   );
 }
 

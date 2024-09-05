@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo1.png";
 import Button from "./Button";
+import { CartContext } from "../context/CartContext";
 
 function Navbar() {
   const [showNav, setShowNav] = useState(false);
-  const [cartCount, setCartCount] = useState(2);
   const [showAccountOptions, setShowAccountOptions] = useState(false);
   const navigate = useNavigate();
+  const { cart } = useContext(CartContext);
+  const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   const isLoggedIn = localStorage.getItem("token");
 

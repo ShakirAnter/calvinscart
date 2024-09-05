@@ -1,10 +1,12 @@
 // src/components/ProductCard.jsx
-import React from "react";
+import React, { useContext } from "react";
 import Button from "./Button";
 import { useNavigate } from "react-router-dom";
+import { CartContext } from "../context/CartContext";
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
+  const { addToCart } = useContext(CartContext);
 
   const truncatedName =
     product.name.length > 25
@@ -23,7 +25,7 @@ function ProductCard({ product }) {
   return (
     <div
       className="bg-[#c7bcbb] cursor-pointer border border-gray-200 shadow-sm p-4 rounded-3xl"
-      onClick={() => navigate(`/products/${product._id}`)}
+      onClick={() => (window.location.href = `/products/${product._id}`)}
     >
       <img
         src={`data:image/jpeg;base64,${product.image}`}
@@ -33,7 +35,13 @@ function ProductCard({ product }) {
       <h3 className="text-lg text-black font-semibold mb-2">{truncatedName}</h3>
       <p className="text-textMuted mb-4">{truncatedDescription}</p>
       <p className="text-xl text-black font-bold mb-4">{formattedPrice}</p>
-      <Button text="Add To Cart" />
+      <Button
+        text="Add To Cart"
+        onClick={(e) => {
+          e.stopPropagation();
+          addToCart(product);
+        }}
+      />
     </div>
   );
 }

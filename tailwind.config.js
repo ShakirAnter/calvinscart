@@ -22,6 +22,8 @@ module.exports = {
         background: "#F3F4F6",
         // Primary text color (used for headings, paragraphs, etc.)
         textPrimary: "#FFF",
+        // Primary text color (used for headings, paragraphs, etc.)
+        textSec: "#272928",
         // Muted text color (used for secondary text, etc.)
         textMuted: "#6B7280",
         // Error color (used for error messages, etc.)

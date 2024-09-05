@@ -14,6 +14,7 @@ function Button({ type, text, variant = "primary", onClick, className }) {
       onClick={onClick}
       className={`${baseClasses} ${variantClasses}`}
     >
+      {/* <i className="fa-solid fa-shopping-cart"></i> */}
       {text}
     </button>
   );

@@ -178,9 +178,7 @@ const CategoriesSelector = ({ categories, setCategories }) => {
               name={category.name}
               img={`data:image/png;base64,${category.image}`}
               onClick={() =>
-                navigate(`/categories/${category._id}`, {
-                  state: { categories },
-                })
+                window.location.href = `/categories/${category._id}`
               }
             />
           ))}
