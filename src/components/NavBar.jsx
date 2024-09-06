@@ -67,7 +67,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="bg-[#0F172A] w-screen">
+    <nav className="bg-[#0F172A] w-screen fixed z-10">
       <div className="px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex justify-between items-center h-16 w-full">
           <div className="flex flex-col items-center justify-center flex-shrink-0">
@@ -119,6 +119,17 @@ function Navbar() {
 
           <div className="flex items-center justify-between gap-4 md:hidden lg:hidden">
             <AccountDropDown />
+
+            <div className="relative">
+              <Link to="/cart" className="text-white inline-flex">
+                <i className="fa-solid fa-bag-shopping text-xl transition-none"></i>
+              </Link>
+              {cartCount > 0 && (
+                <span className="absolute top-0 right-[-13px] text-xs bg-red-500 text-white rounded-full px-1 py-0.5">
+                  {cartCount}
+                </span>
+              )}
+            </div>                                                        
 
             <div
               className="md:hidden lg:hidden cursor-pointer"

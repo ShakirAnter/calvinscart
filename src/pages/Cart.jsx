@@ -4,6 +4,9 @@ import NavBar from "../components/NavBar";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 
+import NewsLetter from "../components/NewsLetter";
+import Footer from "../components/Footer";
+
 const Cart = () => {
   const navigate = useNavigate();
   const { cart, addToCart, removeFromCart, updateQuantity, clearCart } =
@@ -130,6 +133,8 @@ const Cart = () => {
           )}
         </div>
       </div>
+      <NewsLetter />
+      <Footer />
     </div>
   );
 };
