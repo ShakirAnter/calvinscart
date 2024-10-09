@@ -46,10 +46,29 @@ const CartProvider = ({ children }) => {
     localStorage.removeItem("cart");
   };
 
-  const syncCart = (userCart) => {
-    // This function will be called when a user logs in
-    // It will sync the local cart with the user's cart on the server
-    setCart(userCart);
+  const syncCart = async (userId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/cart/sync`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          cart,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCart(data.cart.items); // Update the context with the synced cart
+        localStorage.setItem("cart", JSON.stringify(data.cart.items)); // Sync with local storage as well
+      } else {
+        console.error("Failed to sync cart");
+      }
+    } catch (error) {
+      console.error("Error syncing cart:", error);
+    }
   };
 
   return (

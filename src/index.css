@@ -38,6 +38,14 @@ a:hover {
   color: #535bf2;
 }
 
+.sticky-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+}
+
 body {
   margin: 0;
   display: flex;
@@ -102,6 +110,19 @@ button:focus-visible {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: right;
+}
+
+.about-hero {
+  background-image: url("./assets/images/about_hero_bg.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: left;
+}
+
+.service-card:hover{
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+  transition: all 0.3s ease-in-out;
 }
 
 .clothing-hero {

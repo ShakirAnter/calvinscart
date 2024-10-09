@@ -36,11 +36,11 @@ const Cart = () => {
       <div className={`${cartCount > 0 ? "p-10" : ""}`}>
         <div
           className={`${
-            cartCount > 0 ? "w-[80%] p-4 border" : "w-screen p-40"
+            cartCount > 0 ? "w-[80%] p-4 border" : "w-screen p-40 flex flex-col items-center"
           } rounded-lg`}
         >
           {cart.length === 0 ? (
-            <div className="flex flex-col justify-center items-center h-full">
+            <div className="flex flex-col justify-center items-center w-screen h-full">
               <h2 className="text-3xl">Your Cart Is Empty.</h2>
               <p className="text-lg text-gray-400 mb-2 mt-2">
                 All your cart items will be displayed here, seems like you don't

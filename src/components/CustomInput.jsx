@@ -17,7 +17,7 @@ const CustomInput = (props) => {
 
   return (
     <div
-      className={`border flex items-center px-3 py-2 rounded-xl ${divClassName}`}
+      className={`border flex items-center px-3 rounded-xl ${divClassName}`}
     >
       {icon && <i className={icon}></i>}
       <input

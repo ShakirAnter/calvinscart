@@ -31,6 +31,11 @@ const Login = () => {
         const data = await response.json();
 
         if (response.ok) {
+          // Set the current user data in localStorage for future use
+          const userData = data.user;
+          localStorage.setItem("currentUser", JSON.stringify(userData));
+
+          // Set the JSON WEB TOKEN in localStorage for Authorization
           const token = data.token;
           localStorage.setItem("token", token);
           navigate("/");

@@ -164,8 +164,8 @@ const CategoriesSelector = ({ categories, setCategories }) => {
   return (
     <div className="flex flex-col items-center justify-center w-screen">
       <h2 className="text-3xl">Categories</h2>
-      <p className="text-lg md:text-base">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, minima!
+      <p className="text-lg md:text-base w-[70%]">
+      Discover our curated selection of products across all categories. Whether you're looking for the latest trends or timeless classics, shop by category to find exactly what you need, effortlessly.
       </p>
       <div
         className="flex flex-nowrap overflow-x-auto justify-center w-screen mt-5"

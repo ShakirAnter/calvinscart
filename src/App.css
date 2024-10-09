@@ -1,7 +1,8 @@
 #root {
-  max-width: 1280px;
+  width: 100%;
   margin: 0;
   padding: 0;
+  padding-top: 64px;
   box-sizing: border-box;
   text-align: center;
 }
