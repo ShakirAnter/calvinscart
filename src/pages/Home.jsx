@@ -24,11 +24,14 @@ import NewsLetter from "../components/NewsLetter";
 import { ACC_TOKEN, API_BASE_URL } from "../config/apiConfig";
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
+import ProductSkeletons from "../components/ProductSkeletons";
 
 function Home() {
   const [categories, setCategories] = useState(null);
   const [productsData, setProductsData] = useState(null);
   const navigate = useNavigate();
+  const [error, setError] = useState(null); // Add error state
+  const [loading, setLoading] = useState(true);
 
   const fetchAllProducts = async () => {
     try {
@@ -48,10 +51,14 @@ function Home() {
         setProductsData(data.products);
         localStorage.setItem("productsData", JSON.stringify(data.products));
       } else {
+        setError(data.message); // Set error message
         console.error("Failed to fetch products: ", data.message);
       }
     } catch (error) {
+      setError("Failed to fetch products."); // Set a generic error message
       console.error("Failed to fetch products: ", error);
+    } finally {
+      setLoading(false); // Set loading to false after fetching
     }
   };
 
@@ -67,7 +74,13 @@ function Home() {
         categories={categories}
         setCategories={setCategories}
       />
-      {categories &&
+
+      {loading ? (
+        <ProductSkeletons count={4} />
+      ) : error ? (
+        <ProductSkeletons count={4} />
+      ) : (
+        categories &&
         categories
           .filter(
             (category) =>
@@ -85,7 +98,8 @@ function Home() {
                   .slice(0, 4)
               } // Only display four products in each category
             />
-          ))}
+          ))
+      )}
       <NewsLetter />
       <Footer />
     </div>
@@ -165,7 +179,9 @@ const CategoriesSelector = ({ categories, setCategories }) => {
     <div className="flex flex-col items-center justify-center w-screen">
       <h2 className="text-3xl">Categories</h2>
       <p className="text-lg md:text-base w-[70%]">
-      Discover our curated selection of products across all categories. Whether you're looking for the latest trends or timeless classics, shop by category to find exactly what you need, effortlessly.
+        Discover our curated selection of products across all categories.
+        Whether you're looking for the latest trends or timeless classics, shop
+        by category to find exactly what you need, effortlessly.
       </p>
       <div
         className="flex flex-nowrap overflow-x-auto justify-center w-screen mt-5"
@@ -178,7 +194,7 @@ const CategoriesSelector = ({ categories, setCategories }) => {
               name={category.name}
               img={`data:image/png;base64,${category.image}`}
               onClick={() =>
-                window.location.href = `/categories/${category._id}`
+                (window.location.href = `/categories/${category._id}`)
               }
             />
           ))}

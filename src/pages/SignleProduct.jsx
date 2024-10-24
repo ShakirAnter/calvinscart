@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import NavBar from "../components/NavBar";
 import { useParams } from "react-router-dom";
 import Button from "../components/Button";
@@ -6,8 +6,14 @@ import NewsLetter from "../components/NewsLetter";
 import Footer from "../components/Footer";
 import ProductCategorySection from "../components/ProductCategorySection";
 
+import { CartContext } from "../context/CartContext";
+import QuantityChanger from "../components/QuantityChanger";
+
 const SignleProduct = () => {
   const { productId } = useParams();
+
+  const { cart, addToCart, removeFromCart, updateQuantity, clearCart } =
+    useContext(CartContext);
 
   const products = JSON.parse(localStorage.getItem("productsData"));
 
@@ -29,6 +35,29 @@ const SignleProduct = () => {
   const categoryProducts = products
     .filter((product) => product.category === selectedCategory._id)
     .slice(0, 4);
+
+  const productInCart = cart.find((item) => item._id === selectedProduct._id);
+  const [quantity, setQuantity] = useState(
+    productInCart ? productInCart.quantity : 1
+  );
+
+  // 
+  const handleIncreaseQuantity = () => {
+    if (quantity < selectedProduct.quantity_left_in_stock) {
+      setQuantity((prev) => prev + 1);
+      addToCart(selectedProduct);
+    }
+  };
+
+  const handleDecreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity((prev) => prev - 1);
+      updateQuantity(selectedProduct._id, quantity - 1);
+    } else {
+      removeFromCart(selectedProduct._id);
+    }
+  };
+  // 
 
   return (
     <div>
@@ -76,7 +105,21 @@ const SignleProduct = () => {
                   (6 verified ratings)
                 </span>
               </div>
-              <Button text="Add To Cart" className="w-full rounded-lg " />
+
+              {productInCart ? (
+                <QuantityChanger
+                  selectedProduct={selectedProduct}
+                />
+              ) : (
+                <Button
+                  text="Add To Cart"
+                  className="w-full rounded-lg"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToCart(selectedProduct);
+                  }}
+                />
+              )}
             </div>
           </div>
 

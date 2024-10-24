@@ -11,6 +11,7 @@ const Cart = () => {
   const navigate = useNavigate();
   const { cart, addToCart, removeFromCart, updateQuantity, clearCart } =
     useContext(CartContext);
+
   const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
@@ -30,13 +31,20 @@ const Cart = () => {
     clearCart();
   };
 
+  const totalPrice = cart.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
+
   return (
     <div className="h-screen bg-gray-900">
       <NavBar />
       <div className={`${cartCount > 0 ? "p-10" : ""}`}>
         <div
           className={`${
-            cartCount > 0 ? "w-[80%] p-4 border" : "w-screen p-40 flex flex-col items-center"
+            cartCount > 0
+              ? "w-[80%] p-4 border"
+              : "w-screen p-40 flex flex-col items-center"
           } rounded-lg`}
         >
           {cart.length === 0 ? (
@@ -61,59 +69,69 @@ const Cart = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {cart.map((item) => (
-                    <tr key={item._id} className="border-b border-gray-700">
-                      <td className="px-4 py-2 flex items-center">
-                        <img
-                          src={`data:image/jpeg;base64,${item.image}`}
-                          alt={item.name}
-                          className="w-12 h-12 mr-5"
-                        />
-                        <span className="text-start">{item.name}</span>
-                      </td>
-                      <td className="px-4 py-2">
-                        <input
-                          type="number"
-                          value={item.quantity}
-                          min={0}
-                          max={item.quantity_left_in_stock}
-                          onChange={(e) =>
-                            handleUpdateQuantity(
-                              item._id,
-                              parseInt(e.target.value, 10)
-                            )
-                          }
-                          className="w-12 pl-2 text-gray-700"
-                        />
-                      </td>
-                      <td className="px-4 py-2">${item.price}</td>
-                      <td className="px-4 py-2">
-                        ${item.price * item.quantity}
-                      </td>
-                      <td className="px-4 py-2">
-                        <button
-                          className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded"
-                          onClick={() => handleRemoveFromCart(item._id)}
-                        >
-                          Remove
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                  {cart.map((item) => {
+                    const formattedPrice = item.price.toLocaleString("en-UG", {
+                      style: "currency",
+                      currency: "UGX",
+                    });
+                    const subtotal = (
+                      item.price * item.quantity
+                    ).toLocaleString("en-UG", {
+                      style: "currency",
+                      currency: "UGX",
+                    });
+
+                    return (
+                      <tr key={item._id} className="border-b border-gray-700">
+                        <td className="px-4 py-2 flex items-center">
+                          <img
+                            src={`data:image/jpeg;base64,${item.image}`}
+                            alt={item.name}
+                            className="w-12 h-12 mr-5"
+                          />
+                          <span className="text-start">{item.name}</span>
+                        </td>
+                        <td className="px-4 py-2">
+                          <input
+                            type="number"
+                            value={item.quantity}
+                            min={0}
+                            max={item.quantity_left_in_stock}
+                            onChange={(e) =>
+                              handleUpdateQuantity(
+                                item._id,
+                                parseInt(e.target.value, 10)
+                              )
+                            }
+                            className="w-12 pl-2 text-white"
+                          />
+                        </td>
+                        <td className="px-4 py-2">{formattedPrice}</td>
+                        <td className="px-4 py-2">{subtotal}</td>
+                        <td className="px-4 py-2">
+                          <button
+                            className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded"
+                            onClick={() => handleRemoveFromCart(item._id)}
+                          >
+                            Remove
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
               <div className="flex justify-between mt-4">
                 <p className="text-lg text-gray-400">
-                  Total Quantity: <span>{cartCount}</span>
+                  Total Quantity: <span className="font-bold">{cartCount}</span>
                 </p>
                 <p className="text-lg text-gray-400">
-                  Total Price:
-                  <span>
-                    $
-                    {cart.reduce(
-                      (acc, item) => acc + item.price * item.quantity,
-                      0
-                    )}
+                  Total Price:{" "}
+                  <span className="font-bold text-[white]">
+                    {totalPrice.toLocaleString("en-UG", {
+                      style: "currency",
+                      currency: "UGX",
+                    })}
                   </span>
                 </p>
                 <button
