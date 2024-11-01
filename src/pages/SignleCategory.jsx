@@ -8,17 +8,19 @@ import bg_image from "../assets/images/hero_bg.png";
 import ProductCard from "../components/ProductCard";
 import NewsLetter from "../components/NewsLetter";
 import Footer from "../components/Footer";
+import NoProductsMessage from "../components/NoProductsMessage";
+import ProrductSkeletons from "../components/ProductSkeletons";
 
 const SignleCategory = ({ category }) => {
-  const [productsData, setProductsData] = useState(null); 
+  const [productsData, setProductsData] = useState(null);
   const { categoryId } = useParams();
+  const [noProductsMessage, setNoProductsMessage] = useState(null); // State for no products message
 
   const categories = JSON.parse(localStorage.getItem("categories"));
 
   const selectedCategory = categories.filter(
     (category) => category._id === categoryId
   );
-  console.log(selectedCategory);
 
   const heroClassName = selectedCategory[0].name
     ? selectedCategory[0].name
@@ -28,8 +30,6 @@ const SignleCategory = ({ category }) => {
         .replace(/[^a-z0-9-]/g, "") + // remove any non-alphanumeric characters except hyphens
       "-hero"
     : "default-hero";
-
-  console.log(heroClassName);
 
   const fetchProductsByCategory = async () => {
     try {
@@ -45,6 +45,14 @@ const SignleCategory = ({ category }) => {
       const data = await response.json();
       if (response.ok) {
         setProductsData(data.products);
+
+        if (data.products.length === 0) {
+          setNoProductsMessage(
+            "Sorry! We don't have any products in this category."
+          );
+        } else {
+          setNoProductsMessage(null);
+        }
       } else {
         console.error("Failed to fetch products: ", data.message);
       }
@@ -74,9 +82,15 @@ const SignleCategory = ({ category }) => {
           <p className="text-lg">{selectedCategory[0].description}</p>
         </div>
 
-        <div className="grid grid-cols-1 px-10 py-10 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-5">
+        <div className={`grid grid-cols-1 ${noProductsMessage ? "" : "px-10 py-10"} md:grid-cols-2 lg:grid-cols-4 gap-5`}>
           {!productsData ? (
-            <div>Loading products</div>
+            <div className="col-span-4">
+              <ProrductSkeletons count={4} />
+            </div>
+          ) : noProductsMessage ? (
+            <div className="col-span-4 ">
+              <NoProductsMessage message={noProductsMessage} />
+            </div>
           ) : (
             productsData.map((product) => (
               <ProductCard key={product._id} product={product} />

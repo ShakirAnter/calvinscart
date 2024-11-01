@@ -3,9 +3,12 @@ import CustomInput from "../components/CustomInput";
 import Button from "../components/Button";
 import { API_BASE_URL } from "../config/apiConfig";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
+
+  const navigate = useNavigate();
+
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
@@ -65,8 +68,15 @@ const SignUp = () => {
 
       if (response.ok) {
         // User registered successfully
-        console.log(data);
-        toast.success(data.message);
+
+        // Set the current user data in localStorage for future use
+        const userData = data.user;
+        localStorage.setItem("currentUser", JSON.stringify(userData));
+
+        // Set the JSON WEB TOKEN in localStorage for Authorization
+        const token = data.token;
+        localStorage.setItem("token", token);
+        navigate("/");
       } else {
         toast.error(data.message);
       }
@@ -292,8 +302,9 @@ const SignUp = () => {
 
           <Button type="submit" text="Sign Up" className="w-full mb-2" />
 
-          <Link to="/login" className="text-white hover:text-white">Already have an account? <strong className="">Sign In</strong></Link>
-
+          <Link to="/login" className="text-white hover:text-white">
+            Already have an account? <strong className="">Sign In</strong>
+          </Link>
         </form>
       </div>
     </div>

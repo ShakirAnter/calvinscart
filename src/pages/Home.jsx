@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import ProductCard from "../components/ProductCard";
 import Button from "../components/Button";
+import NoProductsMessage from "../components/NoProductsMessage";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -32,6 +33,7 @@ function Home() {
   const navigate = useNavigate();
   const [error, setError] = useState(null); // Add error state
   const [loading, setLoading] = useState(true);
+  const [noProductsMessage, setNoProductsMessage] = useState(null); // New state for no products message
 
   const fetchAllProducts = async () => {
     try {
@@ -50,12 +52,21 @@ function Home() {
       if (response.ok) {
         setProductsData(data.products);
         localStorage.setItem("productsData", JSON.stringify(data.products));
+
+        // setNoProductsMessage(null); // Reset the No products message state
       } else {
-        setError(data.message); // Set error message
+        // Handle error messages
+        setError(data.message);
+        if (data.message === "No products found") {
+          setNoProductsMessage(
+            "Sorry! We don't have any products for you now. Please check back later."
+          );
+        }
         console.error("Failed to fetch products: ", data.message);
       }
     } catch (error) {
-      setError("Failed to fetch products."); // Set a generic error message
+      toast.error("Failed to fetch products. Try to refresh the page.");
+      setNoProductsMessage(null); // Clear message if there's an error
       console.error("Failed to fetch products: ", error);
     } finally {
       setLoading(false); // Set loading to false after fetching
@@ -77,28 +88,28 @@ function Home() {
 
       {loading ? (
         <ProductSkeletons count={4} />
-      ) : error ? (
-        <ProductSkeletons count={4} />
+      ) : noProductsMessage ? (
+        <NoProductsMessage message={noProductsMessage} />
       ) : (
         categories &&
-        categories
-          .filter(
-            (category) =>
-              productsData &&
-              productsData.some((product) => product.category === category._id)
-          )
-          .map((category) => (
+        categories.map((category) => {
+          const filteredProducts = productsData.filter(
+            (product) => product.category === category._id
+          );
+
+          // Only render the category if there are products in it
+          if (filteredProducts.length === 0) {
+            return null; // Skip rendering this category if no products
+          }
+
+          return (
             <ProductCategorySection
               key={category._id}
               category={category}
-              products={
-                productsData &&
-                productsData
-                  .filter((product) => product.category === category._id)
-                  .slice(0, 4)
-              } // Only display four products in each category
+              products={filteredProducts.slice(0, 4)} // Only display four products in each category
             />
-          ))
+          );
+        })
       )}
       <NewsLetter />
       <Footer />
@@ -125,6 +136,11 @@ const HeroSection = () => {
 
 const CategoriesSelector = ({ categories, setCategories }) => {
   const navigate = useNavigate();
+
+  // Temporary state for empty category boxes
+  const [emptyCategories, setEmptyCategories] = useState(
+    new Array(5).fill(null)
+  ); // Adjust the number of boxes as needed
 
   const fetchCategories = async () => {
     try {
@@ -169,14 +185,18 @@ const CategoriesSelector = ({ categories, setCategories }) => {
         }}
         onClick={props.onClick}
       >
-        <img src={props.img} alt={props.name} className="w-10" />
-        <span className="text-lg text-black">{props.name}</span>
+        <img
+          src={props.img && props.img}
+          alt={props.name && props.name}
+          className="w-10"
+        />
+        <span className="text-lg text-black">{props.name && props.name}</span>
       </div>
     );
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-screen">
+    <div className="flex flex-col items-center justify-center w-screen p-6">
       <h2 className="text-3xl">Categories</h2>
       <p className="text-lg md:text-base w-[70%]">
         Discover our curated selection of products across all categories.
@@ -187,17 +207,20 @@ const CategoriesSelector = ({ categories, setCategories }) => {
         className="flex flex-nowrap overflow-x-auto justify-center w-screen mt-5"
         style={{ scrollbarWidth: "thin", scrollbarColor: "#ccc #fff" }}
       >
-        {categories &&
-          categories.map((category) => (
-            <CategoryCard
-              key={category.name}
-              name={category.name}
-              img={`data:image/png;base64,${category.image}`}
-              onClick={() =>
-                (window.location.href = `/categories/${category._id}`)
-              }
-            />
-          ))}
+        {categories && categories.length > 0
+          ? categories.map((category) => (
+              <CategoryCard
+                key={category.name}
+                name={category.name}
+                img={`data:image/png;base64,${category.image}`}
+                onClick={() =>
+                  (window.location.href = `/categories/${category._id}`)
+                }
+              />
+            ))
+          : emptyCategories.map((_, index) => (
+              <CategoryCard key={index} name="" img={null} onClick={() => {}} />
+            ))}
       </div>
     </div>
   );

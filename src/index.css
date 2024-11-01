@@ -105,6 +105,19 @@ button:focus-visible {
   }
 }
 
+.fade{
+  animation: fade infinite 1s;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .hero-section {
   background-image: url("./assets/images/hero_bg.png");
   background-size: contain;
