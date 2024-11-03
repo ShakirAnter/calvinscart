@@ -29,7 +29,7 @@
       "dest": "/"
     },
     {
-      "src": "cart",
+      "src": "/cart",
       "dest": "/"
     }
   ]
